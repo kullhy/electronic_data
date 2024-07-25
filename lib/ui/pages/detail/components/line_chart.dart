@@ -21,9 +21,9 @@ class _DataLineChartsState extends State<DataLineCharts> {
       aspectRatio: 1.70,
       child: Padding(
         padding: const EdgeInsets.only(
-          right: 18,
-          left: 12,
-          top: 24,
+          right: 0,
+          left: 8,
+          top: 16,
           bottom: 12,
         ),
         child: LineChart(
