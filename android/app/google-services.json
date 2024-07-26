@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "192678674581",
+    "firebase_url": "https://pzem-2d91d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "pzem-2d91d",
+    "storage_bucket": "pzem-2d91d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192678674581:android:55f01349c9e6f00b805b9c",
+        "android_client_info": {
+          "package_name": "com.example.electronic_data"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoBmWpbO4rp-8C9fiw4abs0wnFTekK0oc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

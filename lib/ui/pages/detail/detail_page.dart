@@ -67,8 +67,8 @@ class _DetailViewState extends State<DetailView> {
             child: Stack(
               children: [
                 PageView(
-                  children: const [
-                    SizedBox(child: DataWidget()),
+                  children:  [
+                    SizedBox(child: DataWidget(dataModel: state.dataModel,)),
                     SizedBox(child: ChartWidget()),
 
                   ],
