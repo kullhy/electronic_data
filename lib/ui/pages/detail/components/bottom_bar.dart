@@ -1,3 +1,4 @@
+import 'package:electronic_data/common/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
@@ -54,6 +55,11 @@ class _BottomBarState extends State<BottomBar> {
                       color: curIndex == 0 ? Colors.red : Colors.transparent,
                     ),
                   ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Hằng ngày",
+                    style: AppTextStyle.blackS16Bold,
+                  ),
                 ),
               ),
             ),
@@ -73,6 +79,11 @@ class _BottomBarState extends State<BottomBar> {
                     border: Border.all(
                       color: curIndex == 1 ? Colors.red : Colors.transparent,
                     ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Thống kê",
+                    style: AppTextStyle.blackS16Bold,
                   ),
                 ),
               ),

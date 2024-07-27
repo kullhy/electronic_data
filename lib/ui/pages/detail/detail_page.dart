@@ -30,11 +30,14 @@ class DetailView extends StatefulWidget {
 
 class _DetailViewState extends State<DetailView> {
   late DetailCubit cubit = context.read<DetailCubit>();
+  PageController pageController = PageController(initialPage: 0);
+  int curIndex = 0;
 
   @override
   void initState() {
     super.initState();
     cubit.startPolling();
+    cubit.getHistoryData();
   }
 
   @override
@@ -67,14 +70,27 @@ class _DetailViewState extends State<DetailView> {
             child: Stack(
               children: [
                 PageView(
-                  children:  [
-                    SizedBox(child: DataWidget(dataModel: state.dataModel,)),
-                    SizedBox(child: ChartWidget()),
-
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: pageController,
+                  children: [
+                    SizedBox(
+                        child: DataWidget(
+                      dataModel: state.dataModel,
+                    )),
+                    const SizedBox(child: ChartWidget()),
                   ],
                 ),
                 BottomBar(
-                  onTap: (p0) {},
+                  onTap: (p0) {
+                    if (curIndex != p0) {
+                      curIndex = p0;
+                      pageController.animateToPage(
+                        p0,
+                        curve: Curves.easeIn,
+                        duration: const Duration(milliseconds: 500),
+                      );
+                    }
+                  },
                 )
               ],
             ),
@@ -83,6 +99,4 @@ class _DetailViewState extends State<DetailView> {
       ),
     );
   }
-
-  
 }

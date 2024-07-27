@@ -1,18 +1,12 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  static const _introKey = '_introKey';
-
-  static const _authKey = '_authKey';
-
-  static const _cartIdKey = "cartIdKey";
-
   static const _didOnboardKey = 'onBoardingFlag';
 
-  static const _isNoti = 'isNoti';
-
-  static const _language = 'language';
+  static const dailyAverageV4 = 'dailyAverageV4';
+  static const dailyAverageV7 = 'dailyAverageV7';
+  static const statisticalV4 = 'statisticalV4';
+  static const statisticalV7 = 'statisticalV7';
 
   //Get onboard
   static Future<bool> isOnboardCompleted() async {
@@ -30,77 +24,73 @@ class SharedPreferencesHelper {
     await prefs.setBool(_didOnboardKey, onBoard ?? true);
   }
 
-  // //Get Noti
-  // static Future<void> getIsNoti() async {
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     GlobalData.instance.isNoti = prefs.getBool(_isNoti) ?? false;
-  //   } catch (e) {
-  //     GlobalData.instance.isNoti = true;
-  //   }
-  // }
+  static Future<void> setDailyAverageV4({double value = 0.0}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var x = prefs.getDouble(dailyAverageV4) ?? 0;
+    double newValue = (x + value) / 2;
+    await prefs.setDouble(dailyAverageV4, newValue);
+  }
 
-  // //Set Noti
-  // static Future<void> setIsNoti(bool isNoti) async {
-  //   GlobalData.instance.isNoti = isNoti;
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setBool(_isNoti, GlobalData.instance.isNoti);
-  // }
+  static Future<void> setDailyAverageV7({double value = 0.0}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var x = prefs.getDouble(dailyAverageV7) ?? 0;
+    double newValue = (x + value) / 2;
+    await prefs.setDouble(dailyAverageV7, newValue);
+  }
 
-  // static Future<void> getLanguage() async {
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     GlobalData.instance.language = prefs.getString(_language) ?? "en";
-  //     var locale = Locale(GlobalData.instance.language);
-  //     Get.updateLocale(locale);
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
+  static Future<double> getDailyAverageV4() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var x = prefs.getDouble(dailyAverageV4) ?? 0;
+    return x;
+  }
 
-  // //Set onboard
-  // static Future<void> setLanguage(String language) async {
-  //   GlobalData.instance.language = language;
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString(_language, GlobalData.instance.language);
-  // }
+  static Future<double> getDailyAverageV7() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var x = prefs.getDouble(dailyAverageV7) ?? 0;
+    return x;
+  }
 
-  // //Get authKey
-  // static Future<int> getCartId() async {
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     return prefs.getInt(_cartIdKey) ?? 0;
-  //   } catch (e) {
-  //     logger.e(e);
-  //     return 0;
-  //   }
-  // }
+  static Future<void> updateStatisticalV4(double value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var x = prefs.getString(statisticalV4) ?? "";
+    List<double> newList = x.split(';').map((str) {
+      return double.parse(str);
+    }).toList();
+    newList.add(value);
+    String newString = newList.map((value) {
+      return value.toString();
+    }).join(';');
+    prefs.setString(statisticalV4, newString);
+  }
 
-  // //Set authKey
-  // static void setCartId(int cartId) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setInt(_cartIdKey, cartId);
-  // }
+  static Future<void> updateStatisticalV7(double value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var x = prefs.getString(statisticalV7) ?? "";
+    // x = "1"
+    List<double> newList = x.split(';').map((str) {
+      return double.parse(str);
+    }).toList();
+    newList.add(value);
+    String newString = newList.map((value) {
+      return value.toString();
+    }).join(';');
+    prefs.setString(statisticalV7, newString);
+  }
 
-  // static void removeApiTokenKey() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.remove(_authKey);
-  // }
+ static  Future<void> checkIfNewDay() async {
 
-  // //Get intro
-  // static Future<bool> isSeenIntro() async {
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     return prefs.getBool(_introKey) ?? false;
-  //   } catch (e) {
-  //     logger.e(e);
-  //     return false;
-  //   }
-  // }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? lastCheckedDate = prefs.getString('lastCheckedDate');
+    String currentDate = DateTime.now().toIso8601String().split('T').first;
 
-  // //Set intro
-  // static void setSeenIntro({isSeen = true}) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setBool(_introKey, isSeen ?? true);
-  // }
+    if (lastCheckedDate == null || lastCheckedDate != currentDate) {
+      var lastValue = await getDailyAverageV4();
+      updateStatisticalV4(lastValue);
+      var lastValue2 = await getDailyAverageV7();
+      updateStatisticalV7(lastValue2);
+
+      // Update the last checked date
+      await prefs.setString('lastCheckedDate', currentDate);
+    }
+  }
 }

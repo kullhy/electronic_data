@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:electronic_data/database/share_preferences_helper.dart';
 import 'package:electronic_data/domain/models/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'detail_state.dart';
 
 class DetailCubit extends Cubit<DetailState> {
@@ -29,6 +31,20 @@ class DetailCubit extends Cubit<DetailState> {
             dataModel: _previousResponse, isUpdate: !state.isUpdate));
       }
     });
+  }
+
+  Future<void> getHistoryData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var x = prefs.getString(SharedPreferencesHelper.statisticalV4) ?? "";
+    List<double> newListV4 = x.split(';').map((str) {
+      return double.parse(str);
+    }).toList();
+    emit(state.copyWith(statisticalV4: newListV4, isUpdate: !state.isUpdate));
+    var x2 = prefs.getString(SharedPreferencesHelper.statisticalV4) ?? "";
+    List<double> newListV7 = x2.split(';').map((str) {
+      return double.parse(str);
+    }).toList();
+    emit(state.copyWith(statisticalV7: newListV7, isUpdate: !state.isUpdate));
   }
 
   Future<DataModel?> fetchData() async {
