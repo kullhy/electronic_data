@@ -3,7 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class DataLineCharts extends StatefulWidget {
-  const DataLineCharts({super.key});
+  const DataLineCharts({super.key, this.statistical});
+    final List<double>? statistical;
 
   @override
   State<DataLineCharts> createState() => _DataLineChartsState();
@@ -63,18 +64,18 @@ class _DataLineChartsState extends State<DataLineCharts> {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 15,
+      fontSize: 14,
     );
     String text;
     switch (value.toInt()) {
+      case 0:
+        text = '0';
+        break;
       case 1:
-        text = '10K';
+        text = '1';
         break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
+      case 2:
+        text = '2';
         break;
       default:
         return Container();
@@ -82,6 +83,19 @@ class _DataLineChartsState extends State<DataLineCharts> {
 
     return Text(text, style: style, textAlign: TextAlign.left);
   }
+
+  List<FlSpot> convertToFlSpot(List<double> values) {
+  double step = 12 / values.length;
+  List<FlSpot> flSpots = [];
+
+  for (int i = 0; i < values.length; i++) {
+    double x = step * i;
+    double y = values[i];
+    flSpots.add(FlSpot(x, y));
+  }
+
+  return flSpots;
+}
 
   LineChartData mainData() {
     return LineChartData(
@@ -113,7 +127,7 @@ class _DataLineChartsState extends State<DataLineCharts> {
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: true,
+            showTitles: false,
             reservedSize: 30,
             interval: 1,
             getTitlesWidget: bottomTitleWidgets,
@@ -124,7 +138,7 @@ class _DataLineChartsState extends State<DataLineCharts> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 24,
           ),
         ),
       ),
@@ -133,20 +147,12 @@ class _DataLineChartsState extends State<DataLineCharts> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: 12,
       minY: 0,
-      maxY: 6,
+      maxY: 2,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
+          spots: convertToFlSpot(widget.statistical??[]),
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,

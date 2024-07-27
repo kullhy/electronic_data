@@ -53,9 +53,15 @@ class SharedPreferencesHelper {
   static Future<void> updateStatisticalV4(double value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var x = prefs.getString(statisticalV4) ?? "";
-    List<double> newList = x.split(';').map((str) {
-      return double.parse(str);
-    }).toList();
+    List<double> newList = [];
+    if (x == "") {
+      newList = [1.404, 1.400, 1.5];
+    } else {
+      newList = x.split(';').map((str) {
+        return double.parse(str);
+      }).toList();
+    }
+
     newList.add(value);
     String newString = newList.map((value) {
       return value.toString();
@@ -66,10 +72,14 @@ class SharedPreferencesHelper {
   static Future<void> updateStatisticalV7(double value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var x = prefs.getString(statisticalV7) ?? "";
-    // x = "1"
-    List<double> newList = x.split(';').map((str) {
-      return double.parse(str);
-    }).toList();
+    List<double> newList = [];
+    if (x == "") {
+      newList = [1.404, 1.400, 1.5];
+    } else {
+      newList = x.split(';').map((str) {
+        return double.parse(str);
+      }).toList();
+    }
     newList.add(value);
     String newString = newList.map((value) {
       return value.toString();
@@ -77,17 +87,20 @@ class SharedPreferencesHelper {
     prefs.setString(statisticalV7, newString);
   }
 
- static  Future<void> checkIfNewDay() async {
-
+  static Future<void> checkIfNewDay() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? lastCheckedDate = prefs.getString('lastCheckedDate');
     String currentDate = DateTime.now().toIso8601String().split('T').first;
 
     if (lastCheckedDate == null || lastCheckedDate != currentDate) {
       var lastValue = await getDailyAverageV4();
-      updateStatisticalV4(lastValue);
+      // if (lastValue != 0) {
+        updateStatisticalV4(lastValue);
+      // }
       var lastValue2 = await getDailyAverageV7();
-      updateStatisticalV7(lastValue2);
+      // if (lastValue2 != 0) {
+        updateStatisticalV7(lastValue2);
+      // }
 
       // Update the last checked date
       await prefs.setString('lastCheckedDate', currentDate);

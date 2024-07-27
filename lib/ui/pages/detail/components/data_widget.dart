@@ -64,7 +64,7 @@ class _DataWidgetState extends State<DataWidget> {
                 unit: "Hz",
               ),
               _infoWidget(
-                title: "Điện năng hiện tại",
+                title: "Hệ số công suất",
                 parameter: "${widget.dataModel?.v6 ?? 0}",
                 textColor: Colors.orange,
                 unit: "",
@@ -105,7 +105,7 @@ class _DataWidgetState extends State<DataWidget> {
           children: [
             Text(
               title.toUpperCase(),
-              style: AppTextTheme.greyS14Bold,
+              style: AppTextTheme.greyS12Bold,
             ),
             const SizedBox(height: 20),
             _buildDataItem(

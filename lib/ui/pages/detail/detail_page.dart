@@ -77,7 +77,7 @@ class _DetailViewState extends State<DetailView> {
                         child: DataWidget(
                       dataModel: state.dataModel,
                     )),
-                    const SizedBox(child: ChartWidget()),
+                     SizedBox(child: ChartWidget(statisticalV4: state.statisticalV4,statisticalV7: state.statisticalV7,)),
                   ],
                 ),
                 BottomBar(

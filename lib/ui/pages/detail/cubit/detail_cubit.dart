@@ -27,6 +27,9 @@ class DetailCubit extends Cubit<DetailState> {
       DataModel? newResponse = await fetchData();
       if (_previousResponse == null || newResponse != _previousResponse) {
         _previousResponse = newResponse;
+        SharedPreferencesHelper.setDailyAverageV4(value:newResponse?.v4??0);
+        SharedPreferencesHelper.setDailyAverageV7(value:newResponse?.v5??0);
+
         emit(state.copyWith(
             dataModel: _previousResponse, isUpdate: !state.isUpdate));
       }
